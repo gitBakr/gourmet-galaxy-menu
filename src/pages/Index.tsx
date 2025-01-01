@@ -68,9 +68,16 @@ const Index = () => {
   };
 
   const quoteFormRef = useRef<HTMLDivElement>(null);
+  const startersRef = useRef<HTMLDivElement>(null);
+  const mainsRef = useRef<HTMLDivElement>(null);
+  const dessertsRef = useRef<HTMLDivElement>(null);
 
   const scrollToQuoteForm = () => {
     quoteFormRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -82,6 +89,29 @@ const Index = () => {
         <p className="text-lg text-gray-600 mb-8">
           Une expérience gastronomique unique pour vos événements
         </p>
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-8">
+          <Button 
+            variant="secondary"
+            onClick={() => scrollToSection(startersRef)}
+            className="w-full md:w-auto"
+          >
+            Nos Entrées
+          </Button>
+          <Button 
+            variant="secondary"
+            onClick={() => scrollToSection(mainsRef)}
+            className="w-full md:w-auto"
+          >
+            Nos Plats
+          </Button>
+          <Button 
+            variant="secondary"
+            onClick={() => scrollToSection(dessertsRef)}
+            className="w-full md:w-auto"
+          >
+            Nos Desserts
+          </Button>
+        </div>
         <Button 
           onClick={scrollToQuoteForm}
           size="lg"
@@ -92,7 +122,7 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 pb-20">
-        <section className="mb-20 fade-in">
+        <section className="mb-20 fade-in" ref={startersRef}>
           <h2 className="section-title">Nos Entrées</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {menuItems.starters.map((item, index) => (
@@ -101,7 +131,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="mb-20 fade-in">
+        <section className="mb-20 fade-in" ref={mainsRef}>
           <h2 className="section-title">Nos Plats</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {menuItems.mains.map((item, index) => (
@@ -110,7 +140,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="mb-20 fade-in">
+        <section className="mb-20 fade-in" ref={dessertsRef}>
           <h2 className="section-title">Nos Desserts</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {menuItems.desserts.map((item, index) => (
