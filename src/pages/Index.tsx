@@ -1,5 +1,7 @@
 import MenuItem from "@/components/MenuItem";
 import QuoteForm from "@/components/QuoteForm";
+import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 const Index = () => {
   const menuItems = {
@@ -65,15 +67,28 @@ const Index = () => {
     ]
   };
 
+  const quoteFormRef = useRef<HTMLDivElement>(null);
+
+  const scrollToQuoteForm = () => {
+    quoteFormRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="py-20 text-center">
         <h1 className="text-5xl md:text-6xl font-bold playfair mb-4">
-          Service Traiteur
+          Salim Dégustation
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-600 mb-8">
           Une expérience gastronomique unique pour vos événements
         </p>
+        <Button 
+          onClick={scrollToQuoteForm}
+          size="lg"
+          className="bg-primary hover:bg-primary/90 text-white"
+        >
+          Demander un devis
+        </Button>
       </header>
 
       <main className="container mx-auto px-4 pb-20">
@@ -104,7 +119,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="fade-in">
+        <section className="fade-in" ref={quoteFormRef}>
           <h2 className="section-title">Demander un Devis</h2>
           <QuoteForm />
         </section>
