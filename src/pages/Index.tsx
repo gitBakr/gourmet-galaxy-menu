@@ -9,19 +9,19 @@ const Index = () => {
       {
         title: "Foie Gras Maison",
         description: "Foie gras mi-cuit, chutney de figues et pain brioché",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9",
         price: "15€/pers"
       },
       {
         title: "Saumon Gravlax",
         description: "Saumon mariné aux herbes, crème d'aneth",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1485833077593-4278bba3f11f",
         price: "12€/pers"
       },
       {
         title: "Velouté de Saison",
         description: "Crème de potimarron, châtaignes torréfiées",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1498936178812-4b2e558d2937",
         price: "10€/pers"
       }
     ],
@@ -29,19 +29,19 @@ const Index = () => {
       {
         title: "Suprême de Volaille",
         description: "Volaille fermière, sauce aux morilles, gratin dauphinois",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1465379944081-7f47de8d74ac",
         price: "25€/pers"
       },
       {
         title: "Filet de Bœuf Wellington",
         description: "Bœuf en croûte, duxelles de champignons, légumes de saison",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1493962853295-0fd70327578a",
         price: "30€/pers"
       },
       {
         title: "Pavé de Saumon",
         description: "Saumon rôti, beurre blanc, risotto aux asperges",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1518877593221-1f28583780b4",
         price: "22€/pers"
       }
     ],
@@ -49,19 +49,19 @@ const Index = () => {
       {
         title: "Royal Chocolat",
         description: "Mousse au chocolat, croustillant praliné",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
         price: "12€/pers"
       },
       {
         title: "Fraisier",
         description: "Génoise, crème mousseline, fraises fraîches",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1439886183900-e79ec0057170",
         price: "12€/pers"
       },
       {
         title: "Mignardises",
         description: "Assortiment de petits fours et macarons",
-        image: "/placeholder.svg",
+        image: "https://images.unsplash.com/photo-1441057206919-63d19fac2369",
         price: "10€/pers"
       }
     ]
