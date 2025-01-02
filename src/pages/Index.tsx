@@ -193,6 +193,40 @@ const Index = () => {
     setActiveSection(sectionName);
   };
 
+  // Ajouter une nouvelle section pour l'aperçu des menus
+  const MenusOverview = () => (
+    <section className="container mx-auto px-4 py-12">
+      <h2 className="section-title">Nos Menus Spéciaux</h2>
+      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {['tunisian', 'moroccan', 'algerian'].map((menuType) => (
+          <div 
+            key={menuType}
+            className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-all"
+          >
+            <h3 className="text-xl font-bold text-primary mb-2">
+              {menuItems[menuType].title}
+            </h3>
+            <p className="text-gray-600 mb-4">Menu complet</p>
+            <p className="text-lg font-bold text-primary">{menuItems[menuType].price}</p>
+            <button
+              onClick={() => {
+                handleSectionChange(
+                  menuType === 'tunisian' ? tunisianRef : 
+                  menuType === 'moroccan' ? moroccanRef : 
+                  algerianRef, 
+                  menuType
+                );
+              }}
+              className="mt-4 w-full bg-primary/10 text-primary px-4 py-2 rounded hover:bg-primary/20 transition-colors"
+            >
+              Voir le détail
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar 
@@ -216,6 +250,12 @@ const Index = () => {
         <p className="text-lg text-gray-600 mb-8">
           Une expérience gastronomique unique pour vos événements
         </p>
+        <button
+          onClick={() => setActiveSection('menus-overview')}
+          className="bg-primary text-white px-8 py-3 rounded-lg text-lg font-bold hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+        >
+          Voir nos menus
+        </button>
       </header>
 
       <main className="container mx-auto px-4 pb-20">
@@ -268,18 +308,21 @@ const Index = () => {
         </section>
 
         {['tunisian', 'moroccan', 'algerian'].map((menuType) => {
-          const [isModalOpen, setIsModalOpen] = useState(false);
+          const [isOrderSectionOpen, setIsOrderSectionOpen] = useState(false);
           const { addOrder } = useOrders();
 
-          const handleOrderMenu = (quantity: number) => {
-            const menu = menuItems[menuType];
+          const handleValidateOrder = () => {
+            const input = document.querySelector('input[type="number"]') as HTMLInputElement;
+            const quantity = parseInt(input.value);
+            
             addOrder({
-              title: menu.title,
-              quantity,
-              price: menu.price,
-              total: parseFloat(menu.price) * quantity
+              title: menuItems[menuType].title,
+              quantity: quantity,
+              price: menuItems[menuType].price,
+              total: parseFloat(menuItems[menuType].price) * quantity
             });
-            setIsModalOpen(false);
+
+            setIsOrderSectionOpen(false);
           };
 
           return (
@@ -293,9 +336,20 @@ const Index = () => {
               ref={menuType === 'tunisian' ? tunisianRef : menuType === 'moroccan' ? moroccanRef : algerianRef}
             >
               <h2 className="section-title">{menuItems[menuType].title}</h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                {menuItems[menuType].items.map((item, index) => (
-                  <MenuItem key={`${menuType}-${index}`} {...item} isMenu={true} />
+              <div className="flex flex-col items-center gap-4 w-[90%] md:max-w-2xl mx-auto">
+                {menuItems[menuType].items.map((item, index, array) => (
+                  <div key={`${menuType}-${index}`} className="w-full">
+                    <div className="w-[85%] md:max-w-xl mx-auto">
+                      <MenuItem {...item} isMenu={true} />
+                    </div>
+                    {index < array.length - 1 && (
+                      <div className="flex items-center justify-center my-3 md:my-4">
+                        <div className="w-16 md:w-24 h-px bg-primary/20"></div>
+                        <span className="mx-3 md:mx-4 text-3xl md:text-4xl font-bold text-primary">+</span>
+                        <div className="w-16 md:w-24 h-px bg-primary/20"></div>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
               <div className="text-center mt-8">
@@ -304,21 +358,99 @@ const Index = () => {
                 </p>
                 <button
                   className="bg-primary text-white px-8 py-3 rounded-lg text-lg font-bold hover:bg-primary/90 transition-colors"
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => setIsOrderSectionOpen(!isOrderSectionOpen)}
                 >
                   Commander ce menu
                 </button>
-              </div>
 
-              <OrderModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                item={{
-                  title: menuItems[menuType].title,
-                  price: menuItems[menuType].price
-                }}
-                onOrder={handleOrderMenu}
-              />
+                {/* Section de commande déroulante */}
+                <div className={`mt-6 ${
+                  isOrderSectionOpen 
+                    ? 'block' 
+                    : 'hidden'
+                }`}>
+                  <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto animate-fade-down">
+                    <h3 className="text-xl font-bold mb-4">Commander {menuItems[menuType].title}</h3>
+                    <div className="mb-4">
+                      <label className="block text-gray-700 mb-2">Quantité (min. 50 pers.) :</label>
+                      <div className="flex items-center justify-center gap-4">
+                        <button 
+                          className="px-3 py-1 border rounded-md"
+                          onClick={() => {
+                            const input = document.querySelector('input[type="number"]') as HTMLInputElement;
+                            const currentValue = parseInt(input.value);
+                            if (currentValue > 50) {
+                              input.value = Math.max(50, currentValue - 10).toString();
+                            }
+                          }}
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          min="50"
+                          max="1000"
+                          defaultValue="50"
+                          className="w-24 text-center border rounded-md p-1"
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value);
+                            if (value < 50) {
+                              e.target.value = "50";
+                              // Afficher le message pour minimum
+                              const errorDiv = e.target.parentElement?.querySelector('.error-message') as HTMLDivElement;
+                              if (errorDiv) {
+                                errorDiv.textContent = "Minimum 50 personnes requis";
+                                setTimeout(() => {
+                                  errorDiv.textContent = "";
+                                }, 3000);
+                              }
+                            }
+                            if (value > 1000) {
+                              e.target.value = "1000";
+                              // Afficher le message pour maximum
+                              const errorDiv = e.target.parentElement?.querySelector('.error-message') as HTMLDivElement;
+                              if (errorDiv) {
+                                errorDiv.textContent = "Maximum 1000 personnes autorisé";
+                                setTimeout(() => {
+                                  errorDiv.textContent = "";
+                                }, 3000);
+                              }
+                            }
+                          }}
+                        />
+                        <button 
+                          className="px-3 py-1 border rounded-md"
+                          onClick={() => {
+                            const input = document.querySelector('input[type="number"]') as HTMLInputElement;
+                            const currentValue = parseInt(input.value);
+                            if (currentValue < 1000) {
+                              input.value = Math.min(1000, currentValue + 10).toString();
+                            }
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                      <div className="error-message text-red-500 text-sm mt-1 h-5 text-center"></div>
+                      <p className="text-sm text-gray-500 mt-1">Incréments de 10 personnes</p>
+                    </div>
+                    <div className="flex justify-end gap-2 mt-6">
+                      <button
+                        onClick={() => setIsOrderSectionOpen(false)}
+                        className="px-4 py-2 border rounded-md hover:bg-gray-100"
+                      >
+                        Annuler
+                      </button>
+                      <button
+                        onClick={handleValidateOrder}
+                        className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                      >
+                        Valider
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
           );
         })}
@@ -401,6 +533,16 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </section>
+
+        <section 
+          className={`transition-all duration-500 mb-20 ${
+            activeSection === 'menus-overview'
+              ? 'opacity-100 translate-y-0 relative' 
+              : 'opacity-0 translate-y-10 pointer-events-none absolute'
+          }`}
+        >
+          <MenusOverview />
         </section>
       </main>
 

@@ -23,7 +23,15 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, item, onOrder 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-96">
+      <div 
+        className="bg-white p-6 rounded-lg w-96 max-h-[90vh] overflow-y-auto"
+        style={{
+          position: 'fixed',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}
+      >
         <h2 className="text-xl font-bold mb-4">Commander {item.title}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
